@@ -140,12 +140,24 @@ function init(){
                     return 'Please enter a valid email email';
                 },
             },
+            {
+                type: 'input',
+                name: 'engineerGithub',
+                message: 'What is the engineer GitHub?',
+                validate: (answer) =>{
+                    if(answer !== ''){
+                        return true;
+                    }
+                    return 'Please enter engineer GitHub';
+                },
+            },
         ])
         .then((answers) => {
             const engineer = new Engineer(
                 answers.engineerId,
                 answers.engineerName,
-                answers.engineerEmail
+                answers.engineerEmail,
+                answers.engineerGithub
             );
             engineer.role = engineer.getRole();
             teamMembers.push(engineer);
@@ -235,7 +247,7 @@ function createTeam (){
                     <ul class="list-group list-group-flush">
                         <li class="card-text">ID: ${object.id}</li>
                         <li class="card-text">Email: ${object.email} </li>
-                        <li class="card-text">Office Number: ${object.gitHubAccount}</li>
+                        <li class="card-text">Office Number: ${object.officeNumber}</li>
                     </ul>
                 </div>
             </div>`;
@@ -252,7 +264,7 @@ function createTeam (){
                 <ul class="list-group list-group-flush">
                     <li class="card-text">ID: ${object.id}</li>
                     <li class="card-text">Email: ${object.email} </li>
-                    <li class="card-text">GitHub: ${object.githubAccount}</li>
+                    <li class="card-text">GitHub: <a href="https://github.com/${object.githubAccount}" target="blank">profile</a></li>
                 </ul>
             </div>
         </div>`;
