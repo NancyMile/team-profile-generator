@@ -1,20 +1,24 @@
-const inquirer = require('inquirer');
-const fs = require('fs');
+const inquirer = require('inquirer'); //pakage for console input
+const fs = require('fs'); //package for generate files
+//calling the classes
 const Manager = require('./lib/Manager');
 const Employee = require('./lib/Employee');
 const Intern = require('./lib/Intern');
 const Engineer = require('./lib/Engineer');
 
 const render = require ('./src/page-template.js');
+//array will contain the members of the team
 const teamMembers = [];
 
 //Gather data
 function init(){
+    //manager info
     inquirer.prompt([
         {
             type: 'input',
             name: 'managerName',
             message: 'What is the manager name?',
+            //check that is not empty
             validate: (answer) =>{
                 if(answer !== ''){
                     return true;
@@ -26,6 +30,7 @@ function init(){
             type: 'input',
             name: 'managerId',
             message: 'What is the manager Id?',
+            //check that contains numbers
             validate: (answer) =>{
                 if(answer.match(/^[1-9]\d*$/)){
                     return true;
@@ -37,6 +42,7 @@ function init(){
             type: 'input',
             name: 'managerEmail',
             message: 'What is the manager email?',
+            //checks the email
             validate: (answer) =>{
                 if(answer.match(/\S+@\S+\.\S+/)){
                     return true;
@@ -57,6 +63,7 @@ function init(){
         },
     ])
     .then((answers) => {
+        //cretaes the object manager
         const manager = new Manager(
             answers.managerId,
             answers.managerName,
@@ -65,11 +72,13 @@ function init(){
         );
         manager.role = manager.getRole();
         teamMembers.push(manager);
-        team();
+        team(); //calls the options of type employees to enter
     })
    
     //team
     function team(){
+        //list employees types nad calls their functions
+        //otherise generates  end generating the team
         inquirer.prompt([
             {
                 type: 'list',
@@ -180,12 +189,24 @@ function init(){
                     return 'Please enter a valid email email';
                 },
             },
+            {
+                type: 'input',
+                name: 'internSchool',
+                message: 'What is the intern school name?',
+                validate: (answer) =>{
+                    if(answer !== ''){
+                        return true;
+                    }
+                    return 'Please enter intern school name';
+                },
+            },
         ])
         .then((answers) => {
             const intern = new Intern(
                 answers.internId,
                 answers.internName,
-                answers.internEmail
+                answers.internEmail,
+                answers.internSchool
             );
             intern.role = intern.getRole();
             teamMembers.push(intern);
@@ -198,45 +219,76 @@ function init(){
 function createTeam (){
     // for each member create a card
     let html = "";
-    let giphy = "";
     teamMembers.forEach((object, index) => {
  
         // object is giving the one by one object
          console.log(index, object.role, object.name, object.id, object.email);
         if(object.role == 'Manager'){
-            giphy = `<iframe src = "https://giphy.com/embed/gbJhETc9WknE0w5o4k" width="60" height="60" frameBorder="0" class="giphy-embed"></iframe>`;
-        }
+            html = html+ `
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header bg-primary">
+                    <iframe src = "https://giphy.com/embed/p2Ow6zI8NbaCeBnpHV" width="80" height="60" frameBorder="0" ali></iframe>
+                    </div>
+                <div class="card-body">
+                    <h5 class="card-title">${object.role}</h5>
+                    <p class="card-text">Name: ${object.name}</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="card-text">ID: ${object.id}</li>
+                        <li class="card-text">Email: ${object.email} </li>
+                        <li class="card-text">Office Number: ${object.gitHubAccount}</li>
+                    </ul>
+                </div>
+            </div>`;
+            }
         else if(object.role == 'Engineer'){
-            giphy = `<iframe src = "https://giphy.com/embed/LqW9dLVjQm3cs" width="60" height="60" frameBorder="0" class="giphy-embed"></iframe>`;
+            html = html+ `
+            <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+            <div class="card-header bg-success">
+                <iframe src = "https://giphy.com/embed/LqW9dLVjQm3cs" width="60" height="60" frameBorder="0"></iframe>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">${object.role}</h5>
+                <p class="card-text">Name: ${object.name}</p>
+                <ul class="list-group list-group-flush">
+                    <li class="card-text">ID: ${object.id}</li>
+                    <li class="card-text">Email: ${object.email} </li>
+                    <li class="card-text">GitHub: ${object.githubAccount}</li>
+                </ul>
+            </div>
+        </div>`;
         }
         else{
-            giphy = `<iframe src="https://giphy.com/embed/ZZYvpiBAS7kSUE4ACs" width="60" height="60" frameBorder="0" class="giphy-embed"></iframe>`;
+            html = html+ `
+            <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+                <div class="card-header bg-warning">
+                    <iframe src = "https://giphy.com/embed/iDZ8vrWkg9BKg" width="60" height="60" frameBorder="0"></iframe>        </div>
+                    <div class="card-body">
+                    <h5 class="card-title">${object.role}</h5>
+                    <p class="card-text">Name: ${object.name}</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="card-text">ID: ${object.id}</li>
+                        <li class="card-text">Email: ${object.email} </li>
+                        <li class="card-text">School: ${object.school}</li>
+                    </ul>
+                </div>
+            </div>`;
         }
-         html = html+ `
-        <div class="weatherparams-container" id="weatherparams-container">
-            <section class="flex-row weather-card">
-                <header>${object.role}</header>
-                `+ giphy + `
-                <p><strong>Name:</strong> ${object.name}</p>
-                <p><strong>ID:</strong> ${object.id}</p>
-                <p><strong>GitHub:</strong> ${object.managerOfficeNumber}</p>
-               </section>
-        </div>`
-       })
-        //console.log("HTML: "+html);       
+    })
        //once finished the foreach generate the file
        fs.writeFileSync('./dist/team.html', `<!DOCTYPE html>
        <html lang="en">
        <head>
          <meta charset="UTF-8">
          <meta http-equiv="X-UA-Compatible" content="ie=edge">
+         <!-- Bootstrap CSS -->
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"/>
          <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
         <link rel="stylesheet" href="./style.css" />
-        <title>Employees</title>
+        <title>My Team</title>
        </head>
        <body>
-         <div>`
+         <div class="card-group">`
                +html+
          `</div>
        </body>
