@@ -264,7 +264,7 @@ function createTeam (){
                 <ul class="list-group list-group-flush">
                     <li class="card-text">ID: ${object.id}</li>
                     <li class="card-text">Email: ${object.email} </li>
-                    <li class="card-text">GitHub: <a href="https://github.com/${object.githubAccount}" target="blank">profile</a></li>
+                    <li class="card-text">GitHub: <a href="https://github.com/${object.gitHubAccount}" target="blank">profile</a></li>
                 </ul>
             </div>
         </div>`;
@@ -300,7 +300,7 @@ function createTeam (){
         <title>My Team</title>
        </head>
        <body>
-         <div class="card-group">`
+         <div class="card-columns">`
                +html+
          `</div>
        </body>
